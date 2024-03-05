@@ -6,9 +6,32 @@
     <title>CryptoApp Dashboard</title>
 </head>
 <body>
-    <form method="POST" action="/users/symbol/add">
+    <form method="POST" action="/users/symbols/add">
         <input type="text" name="symbol" placeholder="crypto token">
         <button>Add</button>
     </form>
+</body>
+
+<br/>
+<br/>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% userSymbols.forEach(userSymbol => { %>
+                <tr>
+                    <td><%= userSymbol.symbol%></td>
+                    <td></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+
 </body>
 </html>
