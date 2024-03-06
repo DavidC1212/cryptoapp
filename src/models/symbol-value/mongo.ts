@@ -17,6 +17,11 @@ class Mongo implements Model{
         return newSymbolValue;
 
     }
+    async getLatest(symbol: string): Promise<DTO> {
+        const symbolValue: DTO[] = await symbolValueModel.find({symbol}).sort({when: -1}).limit(1);
+        return symbolValue[0];
+        
+    }
 }
 
 const mongo = new Mongo();

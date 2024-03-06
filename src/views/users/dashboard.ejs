@@ -24,8 +24,8 @@
         </thead> 
             <% userSymbols.forEach(userSymbol => { %>
                 <tr>
-                    <td><%= userSymbol.symbol%></td>
-                    <td></td>
+                    <td><%= userSymbol?.symbol %></td>
+                    <td><%= symbolValues.find(e => e?.symbol === userSymbol?.symbol)?.value %></td>
                 </tr>
             <% }) %>
         </tbody>
