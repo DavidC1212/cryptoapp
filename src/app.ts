@@ -3,6 +3,8 @@ import userRouter from './routers/users';
 import path from 'path';
 import config from "config";
 import errorHandler from "./middlewares/error/error-handler";
+import session  from "express-session";
+import auth from "./middlewares/github-auth";
 
 const server = express()
 const port = config.get<number>('app.port')
@@ -13,6 +15,20 @@ server.use(express.urlencoded())
 // views setup
 server.set('views', path.resolve(__dirname,  'views'))
 server.set('view engine', 'ejs')
+
+// github auth
+server.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+  }));
+
+server.use(auth.initialize());
+server.use(auth.session());
+
 
 server.use('/users', userRouter);
 

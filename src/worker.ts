@@ -8,6 +8,7 @@ import getModel from './models/user-symbol/factory';
 import getSymbolValueModel from './models/symbol-value/factory';
 import axios from 'axios'
 import cheerio  from 'cheerio';
+import { io } from 'socket.io-client';
 
 // connect mysql
 // mysql init
@@ -21,17 +22,14 @@ const host = config.get<string>('mongo.host')
 const port = config.get<number>('mongo.port')
 const database = config.get<string>('mongo.database')
 
-
+// socket.io init
+const socket = io(`ws://${config.get<string>('worker.io.host')}:${config.get<string>('worker.io.port')}`)
 
 // connect mongo
-
-// function scrape
-// fetch data from google
-// save in mongo
-// notify clients
-
 async function scrape(symbol: string)
 {
+    // function scrape
+    // fetch data from google
     console.log(`scraping ${symbol}`)
     const response = await axios(`https://www.google.com/finance/quote/${symbol}-USD`);
     const html = response.data;
@@ -39,10 +37,17 @@ async function scrape(symbol: string)
 
     const value = parseFloat($('.YMlKec.fxKbKc').text().replace(',', ''));
 
-    await getSymbolValueModel().add({
+    // save in mongo
+    const result = await getSymbolValueModel().add({
         symbol,
         value,
         when: new Date()
+    })
+
+    // notify clients
+    socket.emit('update from worker', {
+        symbol,
+        value
     })
 
     return value;
@@ -70,9 +75,5 @@ async function work()
 }
 
 (async () => {
-    await Promise.all([
-        connect(),
-        mongoose.connect(`mongodb://${host}:${port}/${database}`)
-    ])
     work();
 })();
