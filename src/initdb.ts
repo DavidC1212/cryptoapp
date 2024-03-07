@@ -25,7 +25,7 @@ const query = util.promisify(connection.query).bind(connection);
         github_id varchar(255) not null,
         primary key (id)
       )    
-    `);
+    `); 
     console.log("created table users!");
 
     

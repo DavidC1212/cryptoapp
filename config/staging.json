@@ -1,0 +1,18 @@
+{
+    "io": {
+        "port": 3000
+    },
+    "mongo":{
+        "host": "mongo"
+    },
+    "mysql":{
+        "host": "mysql"
+    },
+    "worker":
+    {
+        "io":{
+            "host":"io",
+            "port":3000
+        }
+    }
+}

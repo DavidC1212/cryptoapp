@@ -1,10 +1,20 @@
 import  express, { Router } from "express";
 import userRouter from './routers/users';
+import guestRouter from './routers/guests';
+import githubRouter from './routers/github';
 import path from 'path';
 import config from "config";
 import errorHandler from "./middlewares/error/error-handler";
 import session  from "express-session";
 import auth from "./middlewares/github-auth";
+
+declare global{
+    namespace Express{
+        interface User{
+            id: number;
+        }
+    }
+}
 
 const server = express()
 const port = config.get<number>('app.port')
@@ -29,11 +39,15 @@ server.use(session({
 server.use(auth.initialize());
 server.use(auth.session());
 
-
+server.use('/guest', guestRouter)
 server.use('/users', userRouter);
+server.use('/github', githubRouter)
+
 
 // error middlewares
 server.use(errorHandler) 
+
+
 
 server.listen(port, () => {
     console.log(`Listening on port ${port}`)

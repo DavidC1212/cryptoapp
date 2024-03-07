@@ -8,7 +8,7 @@ export async function dashboard(req: Request, res: Response, next: NextFunction)
     try 
     {
     
-    const userSymbols = await getUserSymbolModel().getForUser(1);
+    const userSymbols = await getUserSymbolModel().getForUser(req.user.id);
     const symbolValues = await Promise.all(userSymbols.map(symbol => 
         getSymbolValueModel().getLatest(symbol.symbol)))
     res.render('users/dashboard', {
@@ -28,14 +28,21 @@ export async function addSymbol(req: Request, res: Response, next: NextFunction)
         const userSymbolModel = getUserSymbolModel();
         const inputUserSymbol: DTO = {
             ...req.body,
-            userId: 1
+            userId: req.user.id
         }
         const newUserSymbol = await userSymbolModel.add(inputUserSymbol);
-        console.log(`new user add with id ${newUserSymbol.id}`)
+        console.log(`new user symbol added with id ${newUserSymbol.id}`)
         res.redirect('/users/dashboard')
     }
     catch(err)
     {
         next(err)
     }
+    
+}
+
+export function logout(req: Request, res: Response, next: NextFunction){
+    req.logout(() => {
+        res.redirect('/');
+    })
 }

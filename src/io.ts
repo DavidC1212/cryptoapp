@@ -16,3 +16,4 @@ io.on('connection', socket => {
 });
 
 io.listen(config.get<number>('io.port'));
+console.log('started io connection')

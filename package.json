@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/initdb.ts && nodemon --exec npx ts-node src/app.ts",
-    "build": "tsc",
+    "start:dev": "ts-node src/initdb.ts && nodemon --exec npx ts-node src/app.ts",
+    "start": "node ./dist/initdb && node ./dist/app",
+    "build": "tsc && cp -r ./config ./dist/config && cp -r ./src/views ./dist/views",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "worker": "ts-node src/worker.ts",
-    "io": "ts-node src/io.ts"
+    "worker:dev": "ts-node src/worker.ts",
+    "worker": "node ./dist/worker",
+    "io": "node ./dist/io",
+    "io:dev": "ts-node src/io"
   },
   "repository": {
     "type": "git",
